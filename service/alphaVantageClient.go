@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"stock-ticker-go-service/config"
@@ -34,7 +35,7 @@ func (a *AlphaVantageClient) GetTimeSeriesData() (data.StockData, error) {
 	fmt.Printf("Retrieving data from Alphavantage with symbol %v\n", a.envconfig.Symbol)
 	resp, err := http.Get(getUrl(a.envconfig))
 	if err != nil {
-		fmt.Errorf("alphavantage service unavailable %v", err)
+		log.Printf("alphavantage service unavailable %v", err)
 		return apiResponse, err
 	}
 	defer resp.Body.Close()
@@ -42,14 +43,14 @@ func (a *AlphaVantageClient) GetTimeSeriesData() (data.StockData, error) {
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Errorf("alphavantage service unavailable %v", err)
+		log.Printf("alphavantage service unavailable %v", err)
 		return apiResponse, err
 	}
 
 	// Map the JSON response to the struct
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
-		fmt.Errorf("alphavantage response parse error %v", err)
+		log.Printf("alphavantage response parse error %v", err)
 	}
 	//fmt.Println("Response: ", string(body))
 	return apiResponse, err

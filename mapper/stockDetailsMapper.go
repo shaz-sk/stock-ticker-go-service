@@ -1,7 +1,6 @@
 package mapper
 
 import (
-	"fmt"
 	"log"
 	"maps"
 	"math"
@@ -54,7 +53,6 @@ func getDailyClosingPrice(dailyDataMap map[string]data.DailyData, ndays int, max
 		if count >= ndays {
 			break
 		}
-		fmt.Println(sortedKeys[index])
 		key := sortedKeys[index]
 		floatValue, err := strconv.ParseFloat(dailyDataMap[key].Close, 64)
 		if err != nil {
