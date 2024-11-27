@@ -6,6 +6,7 @@ import (
 	"os"
 	"stock-ticker-go-service/config"
 	"stock-ticker-go-service/handler"
+	"stock-ticker-go-service/mapper"
 	"stock-ticker-go-service/service"
 	"time"
 )
@@ -13,7 +14,9 @@ import (
 func main() {
 	logger := log.New(os.Stdout, "stock-ticker", log.LstdFlags)
 	cfg, _ := config.NewConfig()
-	stockService := service.NewStockTickerService(logger, cfg)
+	client := service.NewApiVantageClient(cfg)
+	stockMapper := mapper.NewStockDetailsMapper(cfg.Ndays)
+	stockService := service.NewStockTickerService(logger, cfg, client, stockMapper)
 
 	stockTickerHandler := handler.NewStockTickerHandler(logger, stockService)
 

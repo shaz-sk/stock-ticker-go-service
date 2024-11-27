@@ -14,6 +14,10 @@ import (
 //
 // Fields:
 // - ndays: The number of days for processing stock data.
+
+type StockDetailsMapperInterface interface {
+	MapToStockDetails(stockData data.StockData) data.StockDetails
+}
 type StockDetailsMapper struct {
 	ndays int
 }

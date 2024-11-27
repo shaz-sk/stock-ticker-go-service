@@ -15,23 +15,28 @@ import (
 // - envconfig: Environment configuration required for AlphavantageClient and StockDetailsMapper.
 
 type StockTickerService struct {
-	logger    *log.Logger
-	envconfig *config.EnvConfig
+	logger             *log.Logger
+	envconfig          *config.EnvConfig
+	client             AlphaVantageClientInterface
+	stockDetailsMapper mapper.StockDetailsMapperInterface
 }
 
 func NewStockTickerService(
 	logger *log.Logger,
 	config *config.EnvConfig,
+	client AlphaVantageClientInterface,
+	stockDetailsMapper mapper.StockDetailsMapperInterface,
 ) *StockTickerService {
 	return &StockTickerService{
-		logger:    logger,
-		envconfig: config,
+		logger:             logger,
+		envconfig:          config,
+		client:             client,
+		stockDetailsMapper: stockDetailsMapper,
 	}
 
 }
 
 func (s *StockTickerService) GetClosingQuote() data.StockDetails {
-	timeSeriesData := NewApiVantageClient(s.envconfig).GetTimeSeriesData()
-	stockDetailsMapper := mapper.NewStockDetailsMapper(s.envconfig.Ndays)
-	return stockDetailsMapper.MapToStockDetails(timeSeriesData)
+	timeSeriesData, _ := s.client.GetTimeSeriesData()
+	return s.stockDetailsMapper.MapToStockDetails(timeSeriesData)
 }
