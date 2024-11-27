@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"log"
 	"stock-ticker-go-service/config"
 	"stock-ticker-go-service/data"
 	"testing"
@@ -31,11 +30,10 @@ func TestStockTickerService_GetClosingQuote(t *testing.T) {
 
 	mockcfg := &config.EnvConfig{
 		Apikey: "test-api-key",
-		Symbol: "AAPL",
+		Symbol: "GOOG",
 		Ndays:  1,
 		Url:    "https://api.example.com",
 	}
-	mockLogger := log.New(nil, "LOG: ", log.Ldate|log.Ltime)
 
 	mockClient := new(MockAlphaVantageClient)
 	mockClient.On("GetTimeSeriesData").Return(getStockData(), nil)
@@ -43,7 +41,7 @@ func TestStockTickerService_GetClosingQuote(t *testing.T) {
 	mockMapper := new(MockStockDetailsMapper)
 	mockMapper.On("MapToStockDetails", getStockData()).Return(expectedStockDetails(), nil)
 
-	service := NewStockTickerService(mockLogger, mockcfg, mockClient, mockMapper)
+	service := NewStockTickerService(mockcfg, mockClient, mockMapper)
 
 	stockDetails := service.GetClosingQuote()
 
