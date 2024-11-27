@@ -1,0 +1,81 @@
+openapi: 3.0.1
+info:
+  title: Stock Ticker
+  description: Stock Ticker Application
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /v1/stock/report:
+    get:
+      tags:
+        - stock ticker
+      summary: Get closing prices of a specific stock.
+      operationId: getClosingQuote
+      responses:
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockDetails'
+
+#      x-codegen-request-body-name: body
+components:
+  schemas:
+    StockDetails:
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: 'MSFT'
+        averageClosingPrice:
+          type: double
+          example: '22.00'
+        averagePeriod:
+          type: integer
+          example: 5
+        dailyClosingPrice:
+          additionalProperties:
+            type: double
+#            $ref: '#/components/schemas/ClosingPrice'
+
+      required:
+        - symbol
+        - averageClosingPrice
+        - averagePeriod
+        - dailyClosingPrice
+#          items:
+#            $ref: '#/components/schemas/DailyStockPrice'
+    DailyStockPrice:
+      type: object
+      properties:
+        date:
+          type: string
+          example: '2024-11-22'
+        currencyCode:
+          type: string
+          example: 'USD'
+        closingPrice:
+          type: number
+          format: currency
+
+    Error:
+      type: object
+      description: A specific error
+      properties:
+        code:
+          type: string
+          description: Code form of the error
+        message:
+          type: string
+          description: Human readable form of the error
+      required:
+        - code
+        - message
