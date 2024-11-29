@@ -58,7 +58,7 @@ func (a *AlphaVantageClient) GetTimeSeriesData() (data.StockData, error) {
 }
 
 func getUrl(envconfig *config.EnvConfig) string {
-	baseURL := "https://www.alphavantage.co/query"
+	baseURL := envconfig.Url
 
 	params := url.Values{}
 	params.Add("symbol", envconfig.Symbol)

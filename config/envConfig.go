@@ -21,7 +21,7 @@ func NewConfig() (*EnvConfig, error) {
 		apikey = "test"
 	}
 
-	symbol, present := os.LookupEnv("APIKEY")
+	symbol, present := os.LookupEnv("SYMBOL")
 	if !present {
 		fmt.Println("SYMBOL environment variable is not set, using default value: MSFT")
 		symbol = "MSFT"

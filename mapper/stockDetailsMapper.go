@@ -28,7 +28,8 @@ func NewStockDetailsMapper(ndays int) *StockDetailsMapper {
 }
 
 func (s *StockDetailsMapper) MapToStockDetails(stockData data.StockData) data.StockDetails {
-	dailyClosingPrice := getDailyClosingPrice(stockData.TimeSeries, s.ndays, 30)
+	filteredDailyData := getNDaysDailyData(stockData.TimeSeries, s.ndays, 30)
+	dailyClosingPrice := getDailyClosingPrice(filteredDailyData)
 	return data.StockDetails{
 		Information:         stockData.Information,
 		Symbol:              stockData.MetaData.Symbol,
@@ -38,13 +39,13 @@ func (s *StockDetailsMapper) MapToStockDetails(stockData data.StockData) data.St
 	}
 }
 
-func getDailyClosingPrice(dailyDataMap map[string]data.DailyData, ndays int, maxDays int) map[string]float64 {
+func getNDaysDailyData(dailyDataMap map[string]data.DailyData, ndays int, maxDays int) map[string]data.DailyData {
 	// Ensure ndays is not greater than maxDays
 	if ndays > maxDays {
 		ndays = maxDays
 	}
 
-	result := make(map[string]float64)
+	result := make(map[string]data.DailyData)
 
 	// Iterate over the first ndays elements in the dailyDataMap
 	count := 0
@@ -54,12 +55,20 @@ func getDailyClosingPrice(dailyDataMap map[string]data.DailyData, ndays int, max
 			break
 		}
 		key := sortedKeys[index]
-		floatValue, err := strconv.ParseFloat(dailyDataMap[key].Close, 64)
+		result[key] = dailyDataMap[key]
+		count++
+	}
+	return result
+}
+
+func getDailyClosingPrice(dailyDataMap map[string]data.DailyData) map[string]float64 {
+	result := make(map[string]float64)
+	for key, value := range dailyDataMap {
+		floatValue, err := strconv.ParseFloat(value.Close, 64)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error parsing DailyClosingPrice data for %v%v", key, err)
 		}
 		result[key] = floatValue
-		count++
 	}
 	return result
 }
