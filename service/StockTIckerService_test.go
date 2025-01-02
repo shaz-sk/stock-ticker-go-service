@@ -8,20 +8,16 @@ import (
 	"testing"
 )
 
-type MockAlphaVantageClient struct {
+type MockClient struct {
 	mock.Mock
 }
 
-func (m *MockAlphaVantageClient) GetTimeSeriesData() (data.StockData, error) {
+func (m *MockClient) GetTimeSeriesData() (data.StockData, error) {
 	args := m.Called()
 	return args.Get(0).(data.StockData), args.Error(1)
 }
 
-type MockStockDetailsMapper struct {
-	mock.Mock
-}
-
-func (m *MockStockDetailsMapper) MapToStockDetails(stockData data.StockData) data.StockDetails {
+func (m *MockClient) MapToStockDetails(stockData data.StockData) data.StockDetails {
 	args := m.Called(stockData)
 	return args.Get(0).(data.StockDetails)
 }
@@ -35,10 +31,10 @@ func TestStockTickerService_GetClosingQuote(t *testing.T) {
 		Url:    "https://api.example.com",
 	}
 
-	mockClient := new(MockAlphaVantageClient)
+	mockClient := new(MockClient)
 	mockClient.On("GetTimeSeriesData").Return(getStockData(), nil)
 
-	mockMapper := new(MockStockDetailsMapper)
+	mockMapper := new(MockClient)
 	mockMapper.On("MapToStockDetails", getStockData()).Return(expectedStockDetails(), nil)
 
 	service := NewStockTickerService(mockcfg, mockClient, mockMapper)
