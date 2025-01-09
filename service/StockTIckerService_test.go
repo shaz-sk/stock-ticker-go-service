@@ -24,7 +24,7 @@ func (m *MockClient) MapToStockDetails(stockData data.StockData) data.StockDetai
 
 func TestStockTickerService_GetClosingQuote(t *testing.T) {
 
-	mockcfg := &config.EnvConfig{
+	mockcfg := config.EnvConfig{
 		Apikey: "test-api-key",
 		Symbol: "GOOG",
 		Ndays:  1,

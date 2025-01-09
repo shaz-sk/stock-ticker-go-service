@@ -21,10 +21,10 @@ type AlphaVantageClientInterface interface {
 }
 
 type AlphaVantageClient struct {
-	envconfig *config.EnvConfig
+	envconfig config.EnvConfig
 }
 
-func NewApiVantageClient(envconfig *config.EnvConfig) *AlphaVantageClient {
+func NewApiVantageClient(envconfig config.EnvConfig) *AlphaVantageClient {
 	return &AlphaVantageClient{envconfig: envconfig}
 }
 
@@ -57,7 +57,7 @@ func (a *AlphaVantageClient) GetTimeSeriesData() (data.StockData, error) {
 
 }
 
-func getUrl(envconfig *config.EnvConfig) string {
+func getUrl(envconfig config.EnvConfig) string {
 	baseURL := envconfig.Url
 
 	params := url.Values{}

@@ -13,13 +13,13 @@ import (
 // - envconfig: Environment configuration required for AlphavantageClient and StockDetailsMapper.
 
 type StockTickerService struct {
-	envconfig          *config.EnvConfig
+	envconfig          config.EnvConfig
 	client             AlphaVantageClientInterface
 	stockDetailsMapper mapper.StockDetailsMapperInterface
 }
 
 func NewStockTickerService(
-	config *config.EnvConfig,
+	config config.EnvConfig,
 	client AlphaVantageClientInterface,
 	stockDetailsMapper mapper.StockDetailsMapperInterface,
 ) *StockTickerService {

@@ -14,7 +14,7 @@ type EnvConfig struct {
 	Url    string
 }
 
-func NewConfig() (*EnvConfig, error) {
+func NewConfig() (EnvConfig, error) {
 	apikey, present := os.LookupEnv("APIKEY")
 	if !present {
 		fmt.Println("APIKEY environment variable is not set")
@@ -35,7 +35,7 @@ func NewConfig() (*EnvConfig, error) {
 
 	url := "https://www.alphavantage.co/query"
 
-	return &EnvConfig{
+	return EnvConfig{
 		Apikey: apikey,
 		Symbol: symbol,
 		Ndays:  ndays,
